@@ -8,8 +8,5 @@ for businesses and non-profits.
 
 This project provides a RPM package of Backdrop.
 
-<style type="text/css">
-.important {color: red;}
-</style>
-<p><strong class="important">Please do not use this RPM package in
-production — it is not ready yet!</strong></p>
+**Please do not use this RPM package in production — it is not ready
+yet!**
