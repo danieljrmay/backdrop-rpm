@@ -6,6 +6,10 @@
 Management System that helps you build modern, comprehensive websites
 for businesses and non-profits.
 
-This project provides a RPM package of Backdrop. <strong style="color:
-red;">Please do not use this RPM package in production — it is not
-ready yet!</strong>
+This project provides a RPM package of Backdrop.
+
+<style type="text/css">
+.important {color: red;}
+</style>
+<p><strong class="important">Please do not use this RPM package in
+production — it is not ready yet!</strong></p>
