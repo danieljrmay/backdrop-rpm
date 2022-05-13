@@ -48,21 +48,23 @@ install --target-directory=%{buildroot}%{_sysconfdir}/httpd/conf.d %{name}.conf
 %dir %{backdrop_conf}
 %config(noreplace) %{backdrop_conf}/settings.php
 %dir %{backdrop_conf}/sites
-%{backdrop_conf}/sites/README.md
 %config(noreplace) %{backdrop_conf}/sites/sites.php
+%{backdrop_conf}/sites/README.md
 %dir %{backdrop_data}
-%{backdrop_data}/core
 %config(noreplace) %{backdrop_data}/.htaccess
+%config(noreplace) %{backdrop_data}/settings.php
+%{backdrop_data}/core
+%{backdrop_data}/files
 %{backdrop_data}/index.php
 %{backdrop_data}/layouts
 %{backdrop_data}/modules
 %{backdrop_data}/robots.txt
+%{backdrop_data}/sites
 %{backdrop_data}/themes
-%config(noreplace) %{backdrop_data}/settings.php
 %dir %{backdrop_var}
 %dir %{backdrop_var}/files
-%{backdrop_var}/files/README.md
 %config(noreplace) %{backdrop_var}/files/.htaccess
+%{backdrop_var}/files/README.md
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 
 %changelog

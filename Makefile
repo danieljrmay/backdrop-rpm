@@ -15,10 +15,11 @@ WGET=/usr/bin/wget
 
 # Makefile parameter variables
 requirements:=awk make mock rpm-build rpmlint wget
-version:=$(shell awk '/Version:/ { print $$2 }' backdrop.spec)
+spec:=src/backdrop.spec
+version:=$(shell awk '/Version:/ { print $$2 }' $(spec))
 mock_root:=default
 mock_resultdir:=.
-srpm:=$(subst noarch,src.rpm, $(shell rpmspec -q --srpm backdrop.spec))
+srpm:=$(subst noarch,src.rpm, $(shell rpmspec -q --srpm $(spec)))
 
 .PHONY: all
 all:
@@ -27,20 +28,18 @@ all:
 .PHONY: lint
 lint:
 	$(info lint:)
-	$(RPMLINT) backdrop.spec
+	$(RPMLINT) $(spec)
 
 .PHONY: sources
-sources: src/backdrop.zip
-
-src/backdrop.zip: backdrop.spec
+sources:
 	$(WGET) --output-document=src/backdrop.zip https://github.com/backdrop/backdrop/releases/download/$(version)/backdrop.zip
 
 .PHONY: srpm
 srpm: $(srpm)
 
-$(srpm): backdrop.spec src/backdrop.zip src/backdrop.conf
+$(srpm): $(spec) src/backdrop.zip src/backdrop.conf
 	$(MOCK) --root=$(mock_root) --resultdir=$(mock_resultdir) --buildsrpm \
-		--spec backdrop.spec --sources src
+		--spec $(spec) --sources src
 .PHONY: rpm
 rpm: $(srpm)
 	$(MOCK) --root=$(mock_root) --resultdir=$(mock_resultdir) --rebuild $(srpm)
@@ -87,6 +86,7 @@ printvars:
 	$(info RPMLINT=$(RPMLINT))
 	$(info WGET=$(WGET))
 	$(info requirements=$(requirements))
+	$(info spec=$(spec))
 	$(info version=$(version))
 	$(info mock_root=$(mock_root))
 	$(info mock_resultdir=$(mock_resultdir))
