@@ -16,8 +16,8 @@ Source2:        %{name}ctl.bash
 BuildArch:      noarch
 
 Requires:       httpd mariadb-server php php-fpm php-gd php-json php-mbstring php-mysqlnd php-pecl-zip php-xml
-Requires(post): policycoreutils-python
-Requires(postun): policycoreutils-python
+Requires(post): policycoreutils policycoreutils-python-utils
+Requires(postun): policycoreutils policycoreutils-python-utils
 
 %description
 Backdrop is a free and Open Source Content Management System that
