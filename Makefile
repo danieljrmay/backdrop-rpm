@@ -37,7 +37,7 @@ sources:
 .PHONY: srpm
 srpm: $(srpm)
 
-$(srpm): $(spec) src/backdrop.zip src/backdrop.conf
+$(srpm): $(spec) src/backdrop.zip src/backdrop-vhost.conf.example src/backdropctl.bash
 	$(MOCK) --root=$(mock_root) --resultdir=$(mock_resultdir) --buildsrpm \
 		--spec $(spec) --sources src
 .PHONY: rpm

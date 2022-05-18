@@ -11,7 +11,7 @@ Summary:        Backdrop is a free and Open Source Content Management System
 License:        GPLv2
 URL:            https://backdropcms.org
 Source0:        https://github.com/%{name}/%{name}/releases/download/%{version}/%{name}.zip
-Source1:        %{name}.conf
+Source1:        %{name}-vhost.conf.example
 Source2:        %{name}ctl.bash
 BuildArch:      noarch
 
@@ -43,7 +43,7 @@ ln --symbolic --target-directory=%{buildroot}%{backdrop_data} ../../../etc/%{nam
 ln --symbolic --target-directory=%{buildroot}%{backdrop_data} ../../../etc/%{name}/sites
 ln --symbolic --target-directory=%{buildroot}%{backdrop_data} ../../../var/lib/%{name}/files
 install --directory %{buildroot}%{_sysconfdir}/httpd/conf.d
-install --target-directory=%{buildroot}%{_sysconfdir}/httpd/conf.d %{name}.conf
+install --target-directory=%{buildroot}%{_sysconfdir}/httpd/conf.d %{name}-vhost.conf.example
 install --directory %{buildroot}%{_sbindir}
 install %{name}ctl.bash %{buildroot}%{_sbindir}/%{name}ctl
 
@@ -91,7 +91,7 @@ fi
 %dir %attr(775,root,apache) %{backdrop_var}/files
 %config(noreplace) %{backdrop_var}/files/.htaccess
 %{backdrop_var}/files/README.md
-%config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
+%{_sysconfdir}/httpd/conf.d/%{name}-vhost.conf.example
 %{_sbindir}/%{name}ctl
 
 %changelog

@@ -1,12 +1,11 @@
-# Apache configuration for Backdrop
+# Example apache configuration for a backdrop CMS website.
 #
 # For more information (or to report issues) go to
 # https://github.com/danieljrmay/backdrop-rpm
 
-Listen 80
 <VirtualHost *:80>
     DocumentRoot "/usr/share/backdrop"
-    ServerName localhost.localdomain
+    ServerName www.example.org
 
     <Directory "/usr/share/backdrop">
         AllowOverride All

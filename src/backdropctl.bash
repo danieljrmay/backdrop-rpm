@@ -286,6 +286,24 @@ EOF
 	else
 		error_and_exit "Failed to start httpd.service and php-fpm.service so exiting." $_exit_status_failed_start_httpd_php_fpm
 	fi
+
+	# Firewall
+	# sudo firewall-cmd --add-service=http (does not make permanent?)
+	# Later do firewall-cmd --add-service=https (make permanent)
+
+	# Temporyarily make settings.php SELinux writable before the installation phase
+	# chcon -t httpd_sys_rw_content_t /etc/backdrop/settings.php
+	# Before changing back with
+	# restorecon /etc/backdrop/settings.php
+
+	# HTTP Strict Transport Security configured in apache conf by default if using SSLCert
+	# <VirtualHost *:443>
+	# ...
+	# Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains"
+	# ...
+	# </VirtualHost>
+
+	# Enable mariadb php-fpm httpd so survive accross reboots
 }
 
 # Process the command line arguments
