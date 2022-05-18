@@ -4,7 +4,7 @@
 %global backdrop_var  %{_localstatedir}/lib/%{name}
 
 Name:           backdrop
-Version:        1.21.4
+Version:        1.22.0
 Release:        1%{?dist}
 Summary:        Backdrop is a free and Open Source Content Management System
 
@@ -55,7 +55,7 @@ semanage fcontext --add --type httpd_config_t '%{backdrop_data}/\.htaccess' 2>/d
 semanage fcontext --add --type httpd_sys_rw_content_t '%{backdrop_var}/files/(.*)' 2>/dev/null || :
 semanage fcontext --add --type httpd_config_t '%{backdrop_var}/\.htaccess' 2>/dev/null || :
 restorecon -R %{backdrop_conf} %{backdrop_data} %{backdrop_var} || :
-setsebool -P httpd_can_sendmail=1 httpd_can_nework_connect=1 || :
+setsebool -P httpd_can_sendmail=1 httpd_can_network_connect=1 || :
 
 %postun
 if [ $1 -eq 0 ] ; then  # final removal
@@ -65,7 +65,7 @@ semanage fcontext --delete --type httpd_sys_content_t '%{backdrop_data}/(.*)' 2>
 semanage fcontext --delete --type httpd_config_t '%{backdrop_data}/\.htaccess' 2>/dev/null || :
 semanage fcontext --delete --type httpd_sys_rw_content_t '%{backdrop_var}/files/(.*)' 2>/dev/null || :
 semanage fcontext --delete --type httpd_config_t '%{backdrop_var}/\.htaccess' 2>/dev/null || :
-#setsebool -P httpd_can_sendmail=0 httpd_can_nework_connect=0 || :
+#setsebool -P httpd_can_sendmail=0 httpd_can_network_connect=0 || :
 fi
 
 %files
