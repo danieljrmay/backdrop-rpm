@@ -264,20 +264,31 @@ exec_install() {
 	fi
 
 	echo -e "\n3. Create a database for your backdrop website."
-	backdrop_database_name=backdrop
-	backdrop_database_user=backdrop_usr
-	backdrop_database_password=backdrop_pwd
+	: "${BACKDROP_DB:=backdrop}"
+	: "${BACKDROP_DB_USR:=backdrop_usr}"
+	: "${BACKDROP_DB_PWD:=$(date +%N%s | md5sum | base64)}"
+	read -r -p "Enter backdrop database name (default=$BACKDROP_DB): " backdrop_db
+	: "${backdrop_db:=$BACKDROP_DB}"
+	read -r -p "Enter backdrop database username (default=$BACKDROP_DB_USR): " backdrop_db_usr
+	: "${backdrop_db_usr:=$BACKDROP_DB_USR}"
+	read -r -p "Enter backdrop database password (default=$BACKDROP_DB_PWD): " backdrop_db_pwd
+	: "${backdrop_db_pwd:=$BACKDROP_DB_PWD}"
+
+	echo "Database name=$backdrop_db"
+	echo "Database username=$backdrop_db_usr"
+	echo "Database password=$backdrop_db_pwd"
+
 	sql=$(
 		cat <<EOF
-CREATE DATABASE ${backdrop_database_name};
-GRANT ALL ON ${backdrop_database_name}.* TO '${backdrop_database_user}'@'localhost' IDENTIFIED BY '${backdrop_database_password}';
-FLUSH   PRIVILEGES;
+CREATE DATABASE ${backdrop_db};
+GRANT ALL ON ${backdrop_db}.* TO '${backdrop_db_usr}'@'localhost' IDENTIFIED BY '${backdrop_db_pwd}';
+FLUSH PRIVILEGES;
 EOF
 	)
 	if mysql --user=root --host=localhost --password --execute "$sql"; then
-		ok "Created and configured database $backdrop_database_name for $backdrop_database_user@localhost."
+		ok "Created and configured database $backdrop_db for $backdrop_db_usr@localhost."
 	else
-		error_and_exit "Failed to create the database $backdrop_database_name so exiting." $_exit_status_failed_to_create_db
+		error_and_exit "Failed to create the database $backdrop_db so exiting." $_exit_status_failed_to_create_db
 	fi
 
 	echo -e "\n4. Start apache (webserver) and php-fpm (FastCGI Process Manager)."
@@ -303,7 +314,18 @@ EOF
 	# ...
 	# </VirtualHost>
 
+	# Backdrop page: URL settings
+	# Use HTTPS for canonical URLs
+	# This option makes Backdrop use HTTPS protocol for generated
+	# canonical URLs. Please note: to get it working in mixed-mode
+	# (both secure and insecure) sessions, the variable https
+	# should be set to TRUE in your file settings.php
+
 	# Enable mariadb php-fpm httpd so survive accross reboots
+
+	# Add bash completeions for this
+
+	# Add command line parameters so that this script can be run without interaction. Challenge will be mysql_secure_installation.
 }
 
 # Process the command line arguments
