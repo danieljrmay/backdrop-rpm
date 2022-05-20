@@ -1,0 +1,19 @@
+# backdrop content management system
+
+#
+# /etc/backdrop
+#
+/etc/backdrop/settings\.php	--	gen_context(system_u:object_r:httpd_sys_content_t,s0)
+/etc/backdrop/sites(/.*)?		gen_context(system_u:object_r:httpd_sys_content_t,s0)
+
+#
+# /usr/share/backdrop
+#
+/usr/share/backdrop/(.*)                gen_context(system_u:object_r:httpd_sys_content_t,s0)
+/usr/share/backdrop/.htaccess   --      gen_context(system_u:object_r:httpd_config_t,s0)
+
+#
+# /var/lib/backdrop
+#
+/var/lib/backdrop/files/(.*)            gen_context(system_u:object_r:httpd_sys_rw_content_t,s0)
+/var/lib/backdrop/files/.htaccess   --  gen_context(system_u:object_r:httpd_config_t,s0)
