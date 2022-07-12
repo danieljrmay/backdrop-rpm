@@ -1,0 +1,11 @@
+--- backdrop.original/core/modules/system/config/system.core.json	2022-05-16 03:36:12.000000000 +0100
++++ backdrop/core/modules/system/config/system.core.json	2022-07-12 19:25:06.521481098 +0100
+@@ -26,7 +26,7 @@
+     "field_purge_batch_size": 200,
+     "file_default_allowed_extensions": "jpg jpeg gif png txt doc docx xls xlsx pdf ppt pptx pps ppsx odt ods odp mp3 mov mp4 m4a m4v mpeg avi ogg oga ogv weba webp webm",
+     "file_default_scheme": "public",
+-    "file_private_path": "",
++    "file_private_path": "/var/lib/backdrop/private_files",
+     "file_public_path": "files",
+     "file_temporary_path": "",
+     "file_transliterate_lowercase": 1,

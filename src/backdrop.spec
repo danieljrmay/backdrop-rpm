@@ -15,6 +15,7 @@ URL:            https://backdropcms.org
 Source0:        https://github.com/%{name}/%{name}/releases/download/%{version}/%{name}.zip
 Source1:        %{name}-vhost.conf.example
 Source2:        %{name}ctl.bash
+Patch0:         system.core.json.patch
 BuildArch:      noarch
 
 Requires:       httpd mariadb-server php php-fpm php-gd php-json php-mbstring php-mysqlnd php-pecl-zip php-xml
@@ -28,6 +29,7 @@ non-profits.
 
 %prep
 %setup -q -n %{name}
+%patch0 -p1
 cp  --preserve %{SOURCE1} .
 cp  --preserve %{SOURCE2} .
 
