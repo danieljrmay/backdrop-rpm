@@ -4,8 +4,8 @@
 * [ ] Package bee and use it to do the initial configuraiton instead
       of `backdropctl`.
 * [ ] Create a `private_files` directory for users to use.
-* [ ] Should we add `setsebool -P httpd_can_sendmail=0
-httpd_can_nework_connect=0 || :` to the `%postun` section of the spec
+* [x] Should we add `setsebool -P httpd_can_sendmail=off
+httpd_can_nework_connect=off || :` to the `%postun` section of the spec
 file?
 * [ ] Modify spec so that we install SELinux configurataion via a
       "policy module". See [Fedora
