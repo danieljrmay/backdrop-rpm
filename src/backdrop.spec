@@ -95,5 +95,8 @@ fi
 %{_sbindir}/%{name}ctl
 
 %changelog
-* Thu May 12 2022 Daniel J. R. May <daniel.may@danieljrmay.com> - 1.21.4-1
+* Wed May 18 2022 Daniel J. R. May <daniel.may@kada-media.com> - 1.22.0-1
+- Update for backdrop 1.22.0
+
+* Thu May 12 2022 Daniel J. R. May <daniel.may@kada-media.com> - 1.21.4-1
 - Initial release.
