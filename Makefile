@@ -106,7 +106,7 @@ clean:
 	rm -f *.rpm 
 
 .PHONY: distclean
-distclean: clean delete-container
+distclean: clean delete-container delete-container-image
 	$(info distclean:)
 	rm -f *~ *.log
 
