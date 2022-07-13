@@ -1,0 +1,11 @@
+[Unit]
+Description=Backdrop firstboot
+After=mariadb.service
+ConditionPathExists=!/var/lock/backdrop-firstboot.lock
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/backdrop-firstboot
+
+[Install]
+WantedBy=multi-user.target
