@@ -14,17 +14,17 @@ This project provides a RPM package of Backdrop.
 ## Installation ##
 
 If you want to install this RPM for testing purposes then it is
-available in a [Copr
+available via a [Copr
 repository](https://copr.fedorainfracloud.org/coprs/danieljrmay/backdrop/package/backdrop/).
 
 If you are running Fedora you should be able to install it with:
 
-```shell
+```
 # Enable the Copr repository
-sudo dnf copr enable danieljrmay/backdrop
+> sudo dnf copr enable danieljrmay/backdrop
 
 # Install the RPM
-sudo dnf install backdrop
+> sudo dnf install backdrop
 ```
 
 ## RPM Features ##
@@ -35,8 +35,8 @@ This RPM does not install backdrop under a single directory
 e.g. `/var/www/html` as would be usual when installing from
 source. Instead, the RPM convention is to follow the [Filesystem
 Hierarchy Standard](https://refspecs.linuxfoundation.org/fhs.shtml)
-which requires that the backdrop codebase are installed in the
-following locations:
+which requires that different parts of the backdrop codebase are
+installed in different locations:
 
 #### `/usr/share/backdrop` ####
 
@@ -95,7 +95,7 @@ policy as follows:
 | `httpd_can_network_connect` | `on`  |
 
 The `%postun`scriptlet of the RPM removes the above SELinux context
-file types from the policy but is does not revert the values of the
+file types from the policy. However, it does not revert the values of the
 SELinux booleans `httpd_can_sendmail` and `httpd_can_network_connect`
 as this might break other applications.
 
@@ -109,32 +109,32 @@ The following instructions apply to Fedora.
 
 ### Building the RPM ###
 
-```shell
+```
 # Install GNU Make 
-sudo dnf install make
+> sudo dnf install make
 
 # Get information about the available make targets
-make help
+> make help
 
 # Install the build and test requirements
-sudo make requirements
+> sudo make requirements
 
 # Build the RPM
-make
+> make
 ```
 
 ### Testing the RPM ###
 
-```shell
+```
 # Create a container image based on the latest version of Fedora with
 # the Backdrop RPM installed
-make container-image
+> make container-image
 
 # Create a running container based on the image
-make container
+> make container
 ```
 
-You can complete the installation of the Backdrop in your new
+You can complete the installation of Backdrop in your new
 container by navigating to `http://localhost:48080` in a browser.
 
 You can explore the filesystem of the running container via a Bash
@@ -189,6 +189,8 @@ Bye
 The default database configuration, as specified in the
 `test/backdrop-firstboot.secrets` is as follows:
 
+| Parameter         | Value              |
+|:------------------|:-------------------|
 | Database Name     | `backdrop`         |
 | Database Username | `backdrop_db_user` |
 | Database Password | `backdrop_db_pwd`  |
