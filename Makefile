@@ -4,7 +4,7 @@
 #
 # See: https://www.gnu.org/software/make/manual
 #
-# Copyright (c) 2021 Daniel J. R. May
+# Copyright (c) 2022 Daniel J. R. May
 #
 
 # Makefile command variables
@@ -16,7 +16,7 @@ RPMLINT=/usr/bin/rpmlint
 WGET=/usr/bin/wget
 
 # Makefile parameter variables
-requirements:=awk buildah make mock podman rpm-build rpmlint wget
+requirements:=buildah gawk make mock podman rpm-build rpmlint wget
 spec:=src/backdrop.spec
 version:=$(shell awk '/Version:/ { print $$2 }' $(spec))
 mock_root:=default
@@ -116,21 +116,24 @@ help:
 	$(info Usage: make TARGET [VAR1=VALUE VAR2=VALUE])
 	$(info )
 	$(info Targets:)
-	$(info   all              The default target, builds all files.)
-	$(info   lint             Lint some of the source files.)
-	$(info   sources          Download the backdrop sources.)
-	$(info   srpm             Build the source RPM.)
-	$(info   rpm              Build the RPM.)
-	$(info   container-image  Build the $(image) container image.)
-	$(info   container        Build the $(container) container.)
-	$(info   clean            Clean up all generated RPM files.)
-	$(info   distclean        Clean up all generated files.)
-	$(info   requirements     Install all packaging development requirements, requires sudo.)
-	$(info   help             Display this help message.)
-	$(info   printvars        Print variable values (useful for debugging).)
-	$(info   printmakevars    Print the Make variable values (useful for debugging).)
+	$(info   all                    The default target, build the RPM.)
+	$(info   lint                   Lint some of the source files.)
+	$(info   sources                Download the backdrop sources.)
+	$(info   srpm                   Build the source RPM.)
+	$(info   rpm                    Build the RPM.)
+	$(info   container-image        Build the $(image) container image.)
+	$(info   container              Build the $(container) container.)
+	$(info   delete-container-image Deletes any pre-existing $(image) container image.)
+	$(info   delete-container       Deletes and pre-existing $(container) container.)
+	$(info   explore-container      Explore a $(container) container via a bash shell.)
+	$(info   clean                  Clean up all generated RPM files.)
+	$(info   distclean              Clean up all generated files.)
+	$(info   requirements           Install all packaging development and testing requirements, requires sudo.)
+	$(info   help                   Display this help message.)
+	$(info   printvars              Print variable values (useful for debugging).)
+	$(info   printmakevars          Print the Make variable values (useful for debugging).)
 	$(info )
-	$(info For more information read the Makefile and see http://www.gnu.org/software/make/manual/html_node/index.html)
+	$(info For more information see the README.md file.)
 	@:
 
 .PHONY: printvars
