@@ -4,7 +4,8 @@
 * [x] Should we add `setsebool -P httpd_can_sendmail=off
 httpd_can_nework_connect=off || :` to the `%postun` section of the spec
 file?
-* [ ] Finish `backdropctl install`.
+* [ ] Finish `backdropctl install`, consider porting to PHP?
+* [ ] Automate patching of `system.core.json.patch` in Makefile.
 * [ ] Modify spec so that we install SELinux configurataion via a
       "policy module". See [Fedora
       PackagingDrafts/SELinux](https://fedoraproject.org/wiki/PackagingDrafts/SELinux)
@@ -19,3 +20,5 @@ file?
       user can have https unless they are providing their own certificate.
 * [ ] Package bee and use it to do the initial configuraiton instead
       of `backdropctl`?
+* [ ] Automatic rebuilding of RPM on backdrop release. Would need
+      webhook from backdrop repository.
