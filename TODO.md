@@ -4,8 +4,8 @@
 * [x] Should we add `setsebool -P httpd_can_sendmail=off
 httpd_can_nework_connect=off || :` to the `%postun` section of the spec
 file?
+* [x] Automate patching of `system.core.json.patch` in Makefile.
 * [ ] Finish `backdropctl install`, consider porting to PHP?
-* [ ] Automate patching of `system.core.json.patch` in Makefile.
 * [ ] Modify spec so that we install SELinux configurataion via a
       "policy module". See [Fedora
       PackagingDrafts/SELinux](https://fedoraproject.org/wiki/PackagingDrafts/SELinux)
