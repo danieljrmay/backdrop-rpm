@@ -16,7 +16,7 @@ RPMLINT=/usr/bin/rpmlint
 WGET=/usr/bin/wget
 
 # Makefile parameter variables
-requirements:=buildah gawk make mock podman rpm-build rpmlint wget
+requirements:=buildah diffutils gawk jq make mock podman rpm-build rpmlint wget zip
 spec:=src/backdrop.spec
 version:=$(shell awk '/Version:/ { print $$2 }' $(spec))
 mock_root:=default
@@ -38,6 +38,12 @@ lint:
 .PHONY: sources
 sources:
 	$(WGET) --output-document=src/backdrop.zip https://github.com/backdrop/backdrop/releases/download/$(version)/backdrop.zip
+
+src/system.core.json.patch: src/backdrop.zip
+	unzip src/backdrop.zip
+	cp -R backdrop backdrop.original
+	jq --indent 4 '.file_private_path = "/var/lib/backdrop/private_files"' backdrop.original/core/modules/system/config/system.core.json > backdrop/core/modules/system/config/system.core.json
+	-diff -urN backdrop.original/core/modules/system/config/system.core.json backdrop/core/modules/system/config/system.core.json > src/system.core.json.patch
 
 .PHONY: srpm
 srpm: $(srpm)
@@ -103,12 +109,13 @@ requirements:
 .PHONY: clean
 clean:
 	$(info clean:)
-	rm -f *.rpm 
+	rm -f *.rpm
 
 .PHONY: distclean
 distclean: clean delete-container delete-oci-image
 	$(info distclean:)
 	rm -f *~ *.log
+	rm -rf backdrop backdrop.original
 
 .PHONY: help
 help:
