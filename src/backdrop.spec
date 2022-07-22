@@ -6,8 +6,8 @@
 %global backdrop_public_files %{_localstatedir}/lib/%{name}/public_files
 
 Name:           backdrop
-Version:        1.22.0
-Release:        2%{?dist}
+Version:        1.22.2
+Release:        1%{?dist}
 Summary:        Backdrop is a free and Open Source Content Management System
 
 License:        GPLv2
@@ -108,8 +108,12 @@ fi
 %{_sbindir}/%{name}ctl
 
 %changelog
+* Fri Jul 22 2022 Daniel J. R. May <daniel.may@kada-media.com> - 1.22.2-1
+- Upstream release.
+
 * Wed May 18 2022 Daniel J. R. May <daniel.may@kada-media.com> - 1.22.0-1
-- Update for backdrop 1.22.0
+- Upstream release.
+- Add private files directory and configuration.
 
 * Thu May 12 2022 Daniel J. R. May <daniel.may@kada-media.com> - 1.21.4-1
 - Initial release.

@@ -51,8 +51,8 @@ rpm: $(rpm)
 $(rpm): $(srpm)
 	$(MOCK) --root=$(mock_root) --resultdir=$(mock_resultdir) --rebuild $(srpm)
 
-.PHONY: container-image
-container-image: delete-container-image $(rpm) test/backdrop.conf test/backdrop-firstboot.service test/backdrop-firstboot.bash
+.PHONY: oci-image
+oci-image: delete-oci-image $(rpm) test/backdrop.conf test/backdrop-firstboot.service test/backdrop-firstboot.bash
 	$(BUILDAH) pull 'registry.fedoraproject.org/fedora:latest'
 	$(BUILDAH) from --name "$(image)" 'registry.fedoraproject.org/fedora:latest'
 	$(BUILDAH) run "$(image)" -- dnf --assumeyes update
@@ -74,8 +74,8 @@ container-image: delete-container-image $(rpm) test/backdrop.conf test/backdrop-
 	$(BUILDAH) commit "$(image)" "$(image)"
 	$(BUILDAH) rm "$(image)"
 
-.PHONY: delete-container-image
-delete-container-image: 
+.PHONY: delete-oci-image
+delete-oci-image: 
 	-$(BUILDAH) rmi $(image)
 
 .PHONY: container
@@ -106,7 +106,7 @@ clean:
 	rm -f *.rpm 
 
 .PHONY: distclean
-distclean: clean delete-container delete-container-image
+distclean: clean delete-container delete-oci-image
 	$(info distclean:)
 	rm -f *~ *.log
 
@@ -121,9 +121,9 @@ help:
 	$(info   sources                Download the backdrop sources.)
 	$(info   srpm                   Build the source RPM.)
 	$(info   rpm                    Build the RPM.)
-	$(info   container-image        Build the $(image) container image.)
+	$(info   oci-image              Build the $(image) container image.)
 	$(info   container              Build the $(container) container.)
-	$(info   delete-container-image Deletes any pre-existing $(image) container image.)
+	$(info   delete-oci-image       Deletes any pre-existing $(image) container image.)
 	$(info   delete-container       Deletes and pre-existing $(container) container.)
 	$(info   explore-container      Explore a $(container) container via a bash shell.)
 	$(info   clean                  Clean up all generated RPM files.)
