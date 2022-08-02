@@ -7,14 +7,13 @@
 
 Name:           backdrop
 Version:        1.22.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Backdrop is a free and Open Source Content Management System
 
 License:        GPLv2
 URL:            https://backdropcms.org
 Source0:        https://github.com/%{name}/%{name}/releases/download/%{version}/%{name}.zip
 Source1:        %{name}-vhost.conf.example
-Source2:        %{name}ctl.bash
 Patch0:         system.core.json.patch
 BuildArch:      noarch
 
@@ -31,7 +30,6 @@ non-profits.
 %setup -q -n %{name}
 %patch0 -p1
 cp  --preserve %{SOURCE1} .
-cp  --preserve %{SOURCE2} .
 
 %build
 # Nothing to do
@@ -49,8 +47,6 @@ ln --symbolic --target-directory=%{buildroot}%{backdrop_data} ../../../etc/%{nam
 ln --symbolic ../../../var/lib/%{name}/public_files %{buildroot}%{backdrop_data}/files
 install --directory %{buildroot}%{_sysconfdir}/httpd/conf.d
 install --target-directory=%{buildroot}%{_sysconfdir}/httpd/conf.d %{name}-vhost.conf.example
-install --directory %{buildroot}%{_sbindir}
-install %{name}ctl.bash %{buildroot}%{_sbindir}/%{name}ctl
 
 %post
 semanage fcontext --add --type httpd_sys_content_t '%{backdrop_conf}/settings\.php' 2>/dev/null || :
@@ -105,9 +101,11 @@ fi
 %config(noreplace) %{backdrop_public_files}/.htaccess
 %doc %{backdrop_public_files}/README.md
 %{_sysconfdir}/httpd/conf.d/%{name}-vhost.conf.example
-%{_sbindir}/%{name}ctl
 
 %changelog
+* Tue Aug  2 2022 Daniel J. R. May <daniel.may@kada-media.com> - 1.22.2-2
+- Remove backdropctl script, replaced by backdrop/core/scripts.
+
 * Fri Jul 22 2022 Daniel J. R. May <daniel.may@kada-media.com> - 1.22.2-1
 - Upstream release.
 

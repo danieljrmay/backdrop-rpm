@@ -1,0 +1,14 @@
+[Unit]
+Description=Install a backdrop site
+After=backdrop-firstboot.service
+Before=httpd.service
+
+[Service]
+Type=oneshot
+EnvironmentFile=-/run/secrets/backdrop-firstboot
+User=apache
+Group=apache
+ExecStart=/usr/local/bin/backdrop-install
+
+[Install]
+WantedBy=multi-user.target

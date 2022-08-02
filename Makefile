@@ -48,7 +48,7 @@ src/system.core.json.patch: src/backdrop.zip
 .PHONY: srpm
 srpm: $(srpm)
 
-$(srpm): $(spec) src/backdrop.zip src/backdrop-vhost.conf.example src/backdropctl.bash
+$(srpm): $(spec) src/backdrop.zip src/backdrop-vhost.conf.example
 	$(MOCK) --root=$(mock_root) --resultdir=$(mock_resultdir) --buildsrpm \
 		--spec $(spec) --sources src
 .PHONY: rpm
@@ -57,31 +57,27 @@ rpm: $(rpm)
 $(rpm): $(srpm)
 	$(MOCK) --root=$(mock_root) --resultdir=$(mock_resultdir) --rebuild $(srpm)
 
-.PHONY: oci-image
-oci-image: delete-oci-image $(rpm) test/backdrop.conf test/backdrop-firstboot.service test/backdrop-firstboot.bash
+.PHONY: test-image
+test-image: delete-test-image $(rpm) test/backdrop-firstboot.service test/backdrop-firstboot.bash
 	$(BUILDAH) pull 'registry.fedoraproject.org/fedora:latest'
 	$(BUILDAH) from --name "$(image)" 'registry.fedoraproject.org/fedora:latest'
 	$(BUILDAH) run "$(image)" -- dnf --assumeyes update
 	$(BUILDAH) copy "$(image)" $(rpm) /root
 	$(BUILDAH) run "$(image)" -- dnf --assumeyes install /root/$(rpm)
-	$(BUILDAH) copy "$(image)" test/backdrop.conf /etc/httpd/conf.d/backdrop.conf
 	$(BUILDAH) copy "$(image)" test/backdrop-firstboot.service /etc/systemd/system/backdrop-firstboot.service
 	$(BUILDAH) copy "$(image)" test/backdrop-firstboot.bash /usr/local/bin/backdrop-firstboot
 	$(BUILDAH) run "$(image)" -- chmod a+x /usr/local/bin/backdrop-firstboot
-	$(BUILDAH) run "$(image)" -- systemctl enable httpd.service
-	$(BUILDAH) run "$(image)" -- systemctl enable mariadb.service
-	$(BUILDAH) run "$(image)" -- systemctl enable php-fpm.service
-	$(BUILDAH) run "$(image)" -- systemctl enable backdrop-firstboot.service
-	$(BUILDAH) config --env BACKDROP_DATABASE_NAME="BACKDROP_DATABASE_NAME" "$(image)"
-	$(BUILDAH) config --env BACKDROP_DATABASE_USER="BACKDROP_DATABASE_USER" "$(image)"
-	$(BUILDAH) config --env BACKDROP_DATABASE_PASSWORD="BACKDROP_DATABASE_PASSWORD" "$(image)"
+	$(BUILDAH) copy "$(image)" test/backdrop-install.service /etc/systemd/system/backdrop-install.service
+	$(BUILDAH) copy "$(image)" test/backdrop-install.bash /usr/local/bin/backdrop-install
+	$(BUILDAH) run "$(image)" -- chmod a+x /usr/local/bin/backdrop-install
+	$(BUILDAH) run "$(image)" -- systemctl enable httpd.service mariadb.service php-fpm.service backdrop-firstboot.service backdrop-install.service
 	$(BUILDAH) config --port 80 "$(image)"
 	$(BUILDAH) config --cmd "/usr/sbin/init" "$(image)"
 	$(BUILDAH) commit "$(image)" "$(image)"
 	$(BUILDAH) rm "$(image)"
 
-.PHONY: delete-oci-image
-delete-oci-image: 
+.PHONY: delete-test-image
+delete-test-image: 
 	-$(BUILDAH) rmi $(image)
 
 .PHONY: container
@@ -89,7 +85,7 @@ container: delete-container test/backdrop-firstboot.secrets
 	$(PODMAN) image exists $(image)
 	$(PODMAN) secret create backdrop-firstboot test/backdrop-firstboot.secrets
 	$(PODMAN) run --name "$(container)" --secret source=backdrop-firstboot,type=mount,mode=400,target=backdrop-firstboot \
-	--publish "48080:80" --detach $(image)
+	--publish "48080:80" --hostname "backdrop-rpm-test" --detach $(image)
 	@echo 'You should be able to complete your backdrop container installation at http://localhost:48080'
 
 .PHONY: delete-container
@@ -112,7 +108,7 @@ clean:
 	rm -f *.rpm
 
 .PHONY: distclean
-distclean: clean delete-container delete-oci-image
+distclean: clean delete-container delete-test-image
 	$(info distclean:)
 	rm -f *~ *.log
 	rm -rf backdrop backdrop.original
@@ -128,9 +124,9 @@ help:
 	$(info   sources                Download the backdrop sources.)
 	$(info   srpm                   Build the source RPM.)
 	$(info   rpm                    Build the RPM.)
-	$(info   oci-image              Build the $(image) container image.)
+	$(info   test-image             Build the $(image) container image.)
 	$(info   container              Build the $(container) container.)
-	$(info   delete-oci-image       Deletes any pre-existing $(image) container image.)
+	$(info   delete-test-image      Deletes any pre-existing $(image) container image.)
 	$(info   delete-container       Deletes and pre-existing $(container) container.)
 	$(info   explore-container      Explore a $(container) container via a bash shell.)
 	$(info   clean                  Clean up all generated RPM files.)

@@ -1,10 +1,12 @@
 [Unit]
-Description=Backdrop firstboot
+Description=Configure backdrop on firstboot
 After=mariadb.service
+Before=backdrop-install.service httpd.service
 ConditionPathExists=!/var/lock/backdrop-firstboot.lock
 
 [Service]
 Type=oneshot
+EnvironmentFile=-/run/secrets/backdrop-firstboot
 ExecStart=/usr/local/bin/backdrop-firstboot
 
 [Install]
