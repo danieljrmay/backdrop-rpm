@@ -63,7 +63,7 @@ test-image: delete-test-image $(rpm) test/backdrop-firstboot.service test/backdr
 	$(BUILDAH) from --name "$(image)" 'registry.fedoraproject.org/fedora:latest'
 	$(BUILDAH) run "$(image)" -- dnf --assumeyes update
 	$(BUILDAH) copy "$(image)" $(rpm) /root
-	$(BUILDAH) run "$(image)" -- dnf --assumeyes install /root/$(rpm)
+	$(BUILDAH) run "$(image)" -- dnf --assumeyes install mariadb-server /root/$(rpm) 
 	$(BUILDAH) copy "$(image)" test/backdrop-firstboot.service /etc/systemd/system/backdrop-firstboot.service
 	$(BUILDAH) copy "$(image)" test/backdrop-firstboot.bash /usr/local/bin/backdrop-firstboot
 	$(BUILDAH) run "$(image)" -- chmod a+x /usr/local/bin/backdrop-firstboot

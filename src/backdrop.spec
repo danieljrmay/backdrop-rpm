@@ -7,7 +7,7 @@
 
 Name:           backdrop
 Version:        1.22.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Backdrop is a free and Open Source Content Management System
 
 License:        GPLv2
@@ -17,7 +17,8 @@ Source1:        %{name}-vhost.conf.example
 Patch0:         system.core.json.patch
 BuildArch:      noarch
 
-Requires:       httpd mariadb-server php php-fpm php-gd php-json php-mbstring php-mysqlnd php-pecl-zip php-xml
+Requires:       httpd mariadb php php-fpm php-gd php-json php-mbstring php-mysqlnd php-pecl-zip php-xml
+Suggests:       mariadb-server
 Requires(post): policycoreutils policycoreutils-python-utils
 Requires(postun): policycoreutils policycoreutils-python-utils
 
@@ -103,6 +104,9 @@ fi
 %{_sysconfdir}/httpd/conf.d/%{name}-vhost.conf.example
 
 %changelog
+* Thu Aug 11 2022 Daniel J. R. May <daniel.may@kada-media.com> - 1.22.2-3
+- Change mariadb-server to suggested package.
+
 * Tue Aug  2 2022 Daniel J. R. May <daniel.may@kada-media.com> - 1.22.2-2
 - Remove backdropctl script, replaced by backdrop/core/scripts.
 
