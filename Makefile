@@ -10,53 +10,23 @@
 # Makefile command variables
 BUILDAH=/usr/bin/buildah
 DNF_INSTALL=/usr/bin/dnf --assumeyes install
-MOCK=/usr/bin/mock
 PODMAN=/usr/bin/podman
-RPMLINT=/usr/bin/rpmlint
-WGET=/usr/bin/wget
 
 # Makefile parameter variables
-requirements:=buildah diffutils gawk jq make mock podman rpm-build rpmlint wget zip
-spec:=src/backdrop.spec
-version:=$(shell awk '/Version:/ { print $$2 }' $(spec))
-mock_root:=default
-mock_resultdir:=.
-srpm:=$(subst noarch,src.rpm,$(shell rpmspec -q --srpm $(spec)))
-rpm:=$(shell rpmspec -q --rpms $(spec)).rpm
-image:=$(subst .noarch,,$(shell rpmspec -q --rpms $(spec)))-rpm-test
-container:=$(subst .noarch,,$(shell rpmspec -q --rpms $(spec)))-rpm-test
+requirements:=buildah make podman rpm-build
+backdrop_rpm:=$(shell rpmspec -q --rpms src/backdrop/backdrop.spec)
+backdrop_systemd_rpm:=$(shell rpmspec -q --rpms src/backdrop-systemd/backdrop-systemd.spec)
+image:=$(subst .noarch,,$(shell rpmspec -q --rpms src/backdrop/backdrop.spec))-rpm-test
+container:=$(subst .noarch,,$(shell rpmspec -q --rpms src/backdrop/backdrop.spec))-rpm-test
 
 .PHONY: all
-all: $(rpm)
-	$(info all:)
+all: src/backdrop/$(backdrop_rpm) src/backdrop-systemd/$(backdrop_systemd_rpm)
 
-.PHONY: lint
-lint:
-	$(info lint:)
-	$(RPMLINT) $(spec)
+src/backdrop/$(backdrop_rpm):
+	$(MAKE) --directory=src/backdrop
 
-.PHONY: sources
-sources:
-	$(WGET) --output-document=src/backdrop.zip https://github.com/backdrop/backdrop/releases/download/$(version)/backdrop.zip
-
-src/system.core.json.patch: src/backdrop.zip
-	unzip src/backdrop.zip
-	cp -R backdrop backdrop.original
-	jq --indent 4 '.file_private_path = "/var/lib/backdrop/private_files"' backdrop.original/core/modules/system/config/system.core.json > backdrop/core/modules/system/config/system.core.json
-	-diff -urN backdrop.original/core/modules/system/config/system.core.json backdrop/core/modules/system/config/system.core.json > src/system.core.json.patch
-
-.PHONY: srpm
-srpm: $(srpm)
-
-$(srpm): $(spec) src/backdrop.zip src/backdrop-vhost.conf.example
-	$(MOCK) --root=$(mock_root) --resultdir=$(mock_resultdir) --buildsrpm \
-		--spec $(spec) --sources src
-
-.PHONY: rpm
-rpm: $(rpm)
-
-$(rpm): $(srpm)
-	$(MOCK) --root=$(mock_root) --resultdir=$(mock_resultdir) --rebuild $(srpm)
+src/backdrop-systemd/$(backdrop_systemd_rpm):
+	$(MAKE) --directory=src/backdrop-systemd
 
 .PHONY: test-image
 test-image: delete-test-image $(rpm) test/backdrop-firstboot.service test/backdrop-firstboot.bash
@@ -105,14 +75,13 @@ requirements:
 
 .PHONY: clean
 clean:
-	$(info clean:)
-	rm -f *.rpm
+	$(MAKE) --directory=src/backdrop clean
+	$(MAKE) --directory=src/backdrop-systemd clean
 
 .PHONY: distclean
-distclean: clean delete-container delete-test-image
-	$(info distclean:)
-	rm -f *~ *.log
-	rm -rf backdrop backdrop.original
+distclean: delete-container delete-test-image
+	$(MAKE) --directory=src/backdrop distclean
+	$(MAKE) --directory=src/backdrop-systemd distclean
 
 .PHONY: help
 help:
@@ -121,10 +90,6 @@ help:
 	$(info )
 	$(info Targets:)
 	$(info   all                    The default target, build the RPM.)
-	$(info   lint                   Lint some of the source files.)
-	$(info   sources                Download the backdrop sources.)
-	$(info   srpm                   Build the source RPM.)
-	$(info   rpm                    Build the RPM.)
 	$(info   test-image             Build the $(image) container image.)
 	$(info   container              Build the $(container) container.)
 	$(info   delete-test-image      Deletes any pre-existing $(image) container image.)
@@ -145,17 +110,9 @@ printvars:
 	$(info printvars:)
 	$(info BUILDAH=$(BUILDAH))
 	$(info DNF_INSTALL=$(DNF_INSTALL))
-	$(info MOCK=$(MOCK))
 	$(info PODMAN=$(PODMAN))
-	$(info RPMLINT=$(RPMLINT))
-	$(info WGET=$(WGET))
 	$(info requirements=$(requirements))
-	$(info spec=$(spec))
-	$(info version=$(version))
-	$(info mock_root=$(mock_root))
-	$(info mock_resultdir=$(mock_resultdir))
-	$(info srpm=$(srpm))
-	$(info rpm=$(rpm))
+	$(info backdrop_rpm=$(backdrop_rpm))
 	$(info image=$(image))
 	$(info container=$(container))
 	@:

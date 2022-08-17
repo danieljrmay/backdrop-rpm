@@ -1,0 +1,36 @@
+--- backdrop.original/core/modules/system/config/system.core.json	2022-08-17 11:43:40.856337319 +0100
++++ backdrop/core/modules/system/config/system.core.json	2022-08-17 11:43:40.945337535 +0100
+@@ -27,7 +27,7 @@
+     "file_additional_public_schemes": [],
+     "file_default_allowed_extensions": "jpg jpeg gif png txt doc docx xls xlsx pdf ppt pptx pps ppsx odt ods odp mp3 mov mp4 m4a m4v mpeg avi ogg oga ogv weba webp webm",
+     "file_default_scheme": "public",
+-    "file_private_path": "",
++    "file_private_path": "/var/lib/backdrop/private_files",
+     "file_public_path": "files",
+     "file_temporary_path": "",
+     "file_transliterate_lowercase": 1,
+@@ -59,7 +59,7 @@
+     "preprocess_css": 0,
+     "preprocess_js": 0,
+     "rss_description": "",
+-    "rss_limit":  10,
++    "rss_limit": 10,
+     "rss_viewmode": "fulltext",
+     "site_403": "",
+     "site_404": "",
+@@ -94,6 +94,14 @@
+     "user_picture_dimensions": "1024x1024",
+     "user_picture_file_size": "800",
+     "user_picture_guidelines": "",
+-    "watchdog_enabled_severity_levels": [0, 1, 2, 3, 4, 5, 6],
++    "watchdog_enabled_severity_levels": [
++        0,
++        1,
++        2,
++        3,
++        4,
++        5,
++        6
++    ],
+     "x_frame_options": "SAMEORIGIN"
+ }
