@@ -51,6 +51,7 @@ srpm: $(srpm)
 $(srpm): $(spec) src/backdrop.zip src/backdrop-vhost.conf.example
 	$(MOCK) --root=$(mock_root) --resultdir=$(mock_resultdir) --buildsrpm \
 		--spec $(spec) --sources src
+
 .PHONY: rpm
 rpm: $(rpm)
 
