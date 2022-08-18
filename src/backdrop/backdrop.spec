@@ -69,10 +69,10 @@ semanage fcontext --delete --type httpd_config_t '%{backdrop_data}/\.htaccess' 2
 semanage fcontext --delete --type httpd_sys_rw_content_t '%{backdrop_private_files}/(.*)' 2>/dev/null || :
 semanage fcontext --delete --type httpd_sys_rw_content_t '%{backdrop_public_files}/(.*)' 2>/dev/null || :
 semanage fcontext --delete --type httpd_config_t '%{backdrop_public_files}/\.htaccess' 2>/dev/null || :
-# We do not revert the SELinux booleans which we configured in %post
-# because they may be used by other applications which we would break.
-# They can be reverted manually by issuing the following command as an
-# administrative user:
+# We do not revert the SELinux booleans which we configured in "post"
+# section because they may be used by other applications which we
+# would break.  They can be reverted manually by issuing the following
+# command as an administrative user:
 #
 # > setsebool -P httpd_can_sendmail=off httpd_can_network_connect=off
 fi

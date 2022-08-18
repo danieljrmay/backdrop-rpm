@@ -9,7 +9,10 @@ for businesses and non-profits.
 
 This project provides a RPM package of Backdrop.
 
-**Please do not use this RPM package in production — it requires more testing!**
+**Please do not use this RPM package in production — it requires more
+testing!**
+
+**Some of this README is out of date and will be updated shortly!**
 
 ## Installation ##
 
@@ -107,7 +110,7 @@ need to modify the code.
 
 The following instructions apply to Fedora.
 
-### Building the RPM ###
+### Building the RPMs ###
 
 ```
 # Install GNU Make 
@@ -119,18 +122,21 @@ The following instructions apply to Fedora.
 # Install the build and test requirements
 > sudo make requirements
 
-# Build the RPM
+# Build the RPMs
 > make
 ```
 
-### Testing the RPM ###
+### Testing the RPMs ###
 
+You can test the freshly built RPMs by installing them in a container.
+ 
 ```
-# Create a container image based on the latest version of Fedora with
-# the Backdrop RPM installed
-> make container-image
+# Create a container image with the freshly built RPMs installed, then
+# create a container based off that image and check that backdrop
+# installs without errors.
+> make test
 
-# Create a running container based on the image
+# Explore the Create a running container based on the image
 > make container
 ```
 
