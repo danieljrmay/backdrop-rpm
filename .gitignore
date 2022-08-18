@@ -1,1 +1,3 @@
-examples
+test/backdrop-rpm-test.image.created
+*.log
+*.rpm
