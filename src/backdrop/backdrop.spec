@@ -6,8 +6,8 @@
 %global backdrop_public_files %{_localstatedir}/lib/%{name}/public_files
 
 Name:           backdrop
-Version:        1.22.2
-Release:        3%{?dist}
+Version:        1.24.0
+Release:        1%{?dist}
 Summary:        Backdrop is a free and Open Source Content Management System
 
 License:        GPLv2
@@ -104,6 +104,9 @@ fi
 %{_sysconfdir}/httpd/conf.d/%{name}-vhost.conf.example
 
 %changelog
+* Mon Mar 13 2023 Daniel J. R. May <daniel.may@kada-media.com> - 1.24.0-1
+- Update to match upstream release.
+
 * Thu Aug 11 2022 Daniel J. R. May <daniel.may@kada-media.com> - 1.22.2-3
 - Change mariadb-server to suggested package.
 

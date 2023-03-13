@@ -27,3 +27,8 @@ file?
 * [ ] Backdrop cron via systemd service.
 * [ ] Automatic rebuilding of RPM on backdrop release. Would need
       webhook from backdrop repository.
+* [ ] Fix status report warning about PHP `max_input_vars` setting.
+* [ ] Fix `Error: no secret with name or id
+      "backdrop-configure-mariadb": no such secret` output when
+      running `make test`.
+

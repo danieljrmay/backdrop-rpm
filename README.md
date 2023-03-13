@@ -7,7 +7,7 @@ status](https://copr.fedorainfracloud.org/coprs/danieljrmay/backdrop/package/bac
 Management System that helps you build modern, comprehensive websites
 for businesses and non-profits.
 
-This project provides a RPM package of Backdrop.
+This project provides an RPM package of Backdrop.
 
 **Please do not use this RPM package in production — it requires more
 testing!**
@@ -105,52 +105,64 @@ as this might break other applications.
 ## Development ##
 
 This repositories code was originally written and tested on a Fedora
-36 workstation. If you are using a different distribution then you may
+workstation. If you are using a different distribution then you may
 need to modify the code.
 
 The following instructions apply to Fedora.
 
 ### Building the RPMs ###
 
-```
+```shell
 # Install GNU Make 
-> sudo dnf install make
+sudo dnf install make
 
 # Get information about the available make targets
-> make help
+make help
 
 # Install the build and test requirements
-> sudo make requirements
+sudo make requirements
 
 # Build the RPMs
-> make
+make
 ```
 
 ### Testing the RPMs ###
 
-You can test the freshly built RPMs by installing them in a container.
+You can test the freshly built RPMs by checking that they install in a
+container.
  
+```shell
+# The make test command performs the following steps:
+#
+# 1. Create a container image with the freshly built RPMs installed.
+# 2. Create a running container based on that image.
+# 3. Check that backdrop automatically installs without errors.
+# 4. Stop and delete the running container if everything seems to have worked.
+make test
 ```
-# Create a container image with the freshly built RPMs installed, then
-# create a container based off that image and check that backdrop
-# installs without errors.
-> make test
 
-# Explore the Create a running container based on the image
-> make container
+You can explore the running test container (essentially changing 
+step 4) by running:
+
+```shell
+# Setting EXPLORE=true changes step 4:
+#
+# 1. Create a container image with the freshly built RPMs installed.
+# 2. Create a running container based on that image.
+# 3. Check that backdrop automatically installs without errors.
+# 4. Open a shell into the running container.
+make test EXPLORE=true
 ```
 
-You can complete the installation of Backdrop in your new
-container by navigating to `http://localhost:48080` in a browser.
+You can also explore the freshly installed backdrop instance via your
+web browser by navigating to `http://localhost:38080` in a
+browser. You can log in with the username `admin` and the password
+`admin_pwd`.
 
-You can explore the filesystem of the running container via a Bash
-shell with `make explore-container`. A typical session would look like
-this:
+You can also explore the running container via the Bash shell:
 
 ```
-> make explore-container
-
-root@CONTAINERID> ls -lh /usr/share/backdrop
+root@backdrop-rpm-test> ls -lh /usr/share/backdrop
 total 20K
 drwxr-xr-x. 1 root root  222 Jul 14 12:49 core
 lrwxrwxrwx. 1 root root   38 Jul 14 11:03 files -> ../../../var/lib/backdrop/public_files
@@ -162,54 +174,16 @@ lrwxrwxrwx. 1 root root   34 Jul 14 11:03 settings.php -> ../../../etc/backdrop/
 lrwxrwxrwx. 1 root root   27 Jul 14 11:03 sites -> ../../../etc/backdrop/sites
 drwxr-xr-x. 1 root root   18 Jul 14 12:49 themes
 
-root@CONTAINERID> mysql -ubackdrop_db_user -hlocalhost -pbackdrop_db_pwd backdrop
-Reading table information for completion of table and column names
-You can turn off this feature to get a quicker startup with -A
-
-Welcome to the MariaDB monitor.  Commands end with ; or \g.
-Your MariaDB connection id is 20
-Server version: 10.5.16-MariaDB MariaDB Server
-
-Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
-
-Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
-
-MariaDB [backdrop]> SHOW TABLES;
-+-----------------------------+
-| Tables_in_backdrop          |
-+-----------------------------+
-| batch                       |
-| cache                       |
-  ⋮
-| variable                    |
-| watchdog                    |
-+-----------------------------+
-59 rows in set (0.001 sec)
-
-MariaDB [backdrop]> QUIT;
-Bye
-[root@CONTAINERID> exit
+# Once you are finshed exploring and experimenting with the container
+# simply type exit.
+[root@backdrop-rpm-test> exit
 > ▮
 ```
 
-The default database configuration, as specified in the
-`test/backdrop-firstboot.secrets` is as follows:
-
-| Parameter         | Value              |
-|:------------------|:-------------------|
-| Database Name     | `backdrop`         |
-| Database Username | `backdrop_db_user` |
-| Database Password | `backdrop_db_pwd`  |
 
 ### Tidying Up ###
 
 ```shell
-# Stop and remove the container
-make delete-container
-
-# Remove the container image
-make delete-container-image
-
 # Delete the built RPM and SRPM
 make clean
 

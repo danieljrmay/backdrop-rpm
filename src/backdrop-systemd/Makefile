@@ -15,8 +15,8 @@ version:=$(shell awk '/Version:/ { print $$2 }' $(spec))
 tarball:=v$(version).tar.gz
 mock_root:=default
 mock_resultdir:=.
-srpm:=$(subst noarch,src.rpm,$(shell rpmspec -q --srpm $(spec)))
-rpm:=$(shell rpmspec -q --rpms $(spec)).rpm
+srpm:=$(shell rpmspec -q --srpm $(spec)).rpm
+rpm:=$(subst src.rpm,noarch.rpm,$(srpm))
 
 .PHONY: all
 all: $(rpm)
